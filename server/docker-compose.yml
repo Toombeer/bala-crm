@@ -1,0 +1,25 @@
+# Сервер BALA CRM + Caddy (автоматический HTTPS от Let's Encrypt).
+# Запуск: cp .env.example .env && (заполнить) && docker compose up -d
+services:
+  app:
+    build: .
+    env_file: .env
+    volumes:
+      - bala-data:/data
+    restart: unless-stopped
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on:
+      - app
+    restart: unless-stopped
+volumes:
+  bala-data:
+  caddy-data:

@@ -1,0 +1,4084 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "BALA CRM API",
+  "version": "1.0.0",
+  "description": "API CRM для детских центров. Авторизация: `Authorization: Bearer <токен>` из /auth/login или /auth/register."
+ },
+ "paths": {
+  "/api/v1/auth/register": {
+   "post": {
+    "summary": "Зарегистрировать центр и владельца",
+    "tags": [
+     "Вход"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RegisterIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/login": {
+   "post": {
+    "summary": "Войти по email и паролю",
+    "tags": [
+     "Вход"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/me": {
+   "get": {
+    "summary": "Текущий пользователь",
+    "tags": [
+     "Вход"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Любой вошедший пользователь"
+   }
+  },
+  "/api/v1/auth/password": {
+   "post": {
+    "summary": "Сменить свой пароль (все сессии завершаются)",
+    "tags": [
+     "Вход"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Любой вошедший пользователь",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PasswordIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/logout-all": {
+   "post": {
+    "summary": "Завершить все сессии на всех устройствах",
+    "tags": [
+     "Вход"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Любой вошедший пользователь"
+   }
+  },
+  "/api/v1/state": {
+   "get": {
+    "summary": "Все данные центра для веб-клиента (с учётом прав роли)",
+    "tags": [
+     "Данные"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   }
+  },
+  "/api/v1/reports/dashboard": {
+   "get": {
+    "summary": "Главный экран: занятия сегодня, долги, заявки, задачи",
+    "tags": [
+     "Отчёты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   }
+  },
+  "/api/v1/reports/finance": {
+   "get": {
+    "summary": "Финансы за месяц: выручка, расходы, прибыль, налог, способы оплаты",
+    "tags": [
+     "Отчёты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`"
+   }
+  },
+  "/api/v1/reports/analytics": {
+   "get": {
+    "summary": "Аналитика: источники, воронка, отказы, посещаемость, заполненность",
+    "tags": [
+     "Отчёты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   }
+  },
+  "/api/v1/rates": {
+   "get": {
+    "summary": "Последние курсы НБ РК и история за 60 дней",
+    "tags": [
+     "Курсы валют"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   }
+  },
+  "/api/v1/rates/refresh": {
+   "post": {
+    "summary": "Загрузить свежие курсы с сайта Нацбанка сейчас",
+    "tags": [
+     "Курсы валют"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `data`"
+   }
+  },
+  "/api/v1/export/payments.csv": {
+   "get": {
+    "summary": "Оплаты за месяц в CSV для Excel (month=ГГГГ-ММ)",
+    "tags": [
+     "Экспорт"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`"
+   }
+  },
+  "/api/v1/export/expenses.csv": {
+   "get": {
+    "summary": "Расходы за месяц в CSV",
+    "tags": [
+     "Экспорт"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`"
+   }
+  },
+  "/api/v1/export/backup.json": {
+   "get": {
+    "summary": "Полная резервная копия центра (формат совместим с импортом)",
+    "tags": [
+     "Экспорт"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `data`"
+   }
+  },
+  "/api/v1/import": {
+   "post": {
+    "summary": "Импорт резервной копии из локального приложения (Умный Зайка или BALA CRM)",
+    "tags": [
+     "Экспорт"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `data`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ImportIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/org/reset": {
+   "post": {
+    "summary": "Удалить все данные центра (настройки, сотрудники, шаблоны сохраняются)",
+    "tags": [
+     "Данные"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `data`"
+   }
+  },
+  "/api/v1/org/demo": {
+   "post": {
+    "summary": "Заполнить пустой центр демо-данными",
+    "tags": [
+     "Данные"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `data`"
+   }
+  },
+  "/api/v1/public/family/{token}": {
+   "get": {
+    "summary": "Данные семьи по секретной ссылке: дети, расписание, остаток занятий, долг, оплаты",
+    "tags": [
+     "Кабинет родителя"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     }
+    },
+    "parameters": [
+     {
+      "name": "token",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/health": {
+   "get": {
+    "summary": "Проверка работы сервера",
+    "tags": [
+     "Служебное"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     }
+    }
+   }
+  },
+  "/api/v1/quote": {
+   "post": {
+    "summary": "Посчитать стоимость абонемента с семейной и доп. скидкой",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/QuoteIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/invoices": {
+   "get": {
+    "summary": "Счета (family_id, status=unpaid|partial|paid)",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`"
+   },
+   "post": {
+    "summary": "Выставить счёт. Когда он оплачен полностью, занятия добавятся детям",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/InvoiceIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/invoices/{id}": {
+   "put": {
+    "summary": "Изменить счёт",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/InvoiceIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить счёт",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/invoices/{id}/message": {
+   "get": {
+    "summary": "Текст счёта для WhatsApp и ссылка wa.me",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/payments": {
+   "get": {
+    "summary": "Оплаты (month=ГГГГ-ММ, method, family_id)",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`"
+   },
+   "post": {
+    "summary": "Принять оплату. Распределяется по счетам семьи, закрытые счета добавляют занятия",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaymentIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/payments/{id}": {
+   "put": {
+    "summary": "Исправить оплату",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PaymentIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить оплату",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/debts": {
+   "get": {
+    "summary": "Кто должен и сколько",
+    "tags": [
+     "Оплаты"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`"
+   }
+  },
+  "/api/v1/org": {
+   "get": {
+    "summary": "Настройки центра",
+    "tags": [
+     "Центр"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "patch": {
+    "summary": "Изменить название, цены, скидки, налог, Kaspi",
+    "tags": [
+     "Центр"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/OrgIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/org/currencies": {
+   "patch": {
+    "summary": "Выбрать валюты на главном экране",
+    "tags": [
+     "Центр"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/OrgIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/users": {
+   "get": {
+    "summary": "Список сотрудников",
+    "tags": [
+     "Сотрудники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Добавить сотрудника с логином и паролем",
+    "tags": [
+     "Сотрудники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `staff`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UserIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/users/{id}": {
+   "patch": {
+    "summary": "Изменить сотрудника, роль, пароль, отключить доступ",
+    "tags": [
+     "Сотрудники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `staff`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UserPatch"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить сотрудника",
+    "tags": [
+     "Сотрудники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `staff`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/groups": {
+   "get": {
+    "summary": "Группы",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Создать группу",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `groups`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/groups/{id}": {
+   "put": {
+    "summary": "Изменить группу",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `groups`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить группу (ученики останутся без группы)",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `groups`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/families": {
+   "get": {
+    "summary": "Семьи",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Создать семью",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FamilyIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/families/{id}": {
+   "put": {
+    "summary": "Изменить семью",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/FamilyIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить семью вместе со счетами",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/families/{id}/token": {
+   "post": {
+    "summary": "Выпустить новую ссылку на кабинет родителя (старая перестанет работать)",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/kids": {
+   "get": {
+    "summary": "Ученики",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Добавить ученика (с существующей или новой семьёй, можно из заявки)",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/KidIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kids/{id}": {
+   "get": {
+    "summary": "Карточка ученика",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   },
+   "patch": {
+    "summary": "Изменить ученика",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/KidPatch"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить ученика",
+    "tags": [
+     "Справочники"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `students`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/expenses": {
+   "get": {
+    "summary": "Расходы (параметр month=ГГГГ-ММ)",
+    "tags": [
+     "Финансы"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`"
+   },
+   "post": {
+    "summary": "Добавить расход",
+    "tags": [
+     "Финансы"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExpenseIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/expenses/{id}": {
+   "put": {
+    "summary": "Изменить расход",
+    "tags": [
+     "Финансы"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExpenseIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить расход",
+    "tags": [
+     "Финансы"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `finance`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/items": {
+   "get": {
+    "summary": "Список закупок с историей цен",
+    "tags": [
+     "Закупки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`"
+   },
+   "post": {
+    "summary": "Добавить товар (с первой ценой)",
+    "tags": [
+     "Закупки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ItemIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/items/{id}": {
+   "put": {
+    "summary": "Изменить товар",
+    "tags": [
+     "Закупки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ItemIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить товар",
+    "tags": [
+     "Закупки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/items/{id}/prices": {
+   "post": {
+    "summary": "Записать цену товара на дату",
+    "tags": [
+     "Закупки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `billing`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PriceIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/templates": {
+   "get": {
+    "summary": "Шаблоны сообщений",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Добавить шаблон",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TemplateIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/templates/{id}": {
+   "put": {
+    "summary": "Изменить шаблон",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TemplateIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить шаблон",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/rules": {
+   "get": {
+    "summary": "Правила автоматизации",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Добавить правило: событие → задача",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/rules/{id}": {
+   "put": {
+    "summary": "Изменить правило",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить правило",
+    "tags": [
+     "Автоматизация"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `settings`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/attendance": {
+   "get": {
+    "summary": "Отметки за дату (date=ГГГГ-ММ-ДД, group_id необязателен)",
+    "tags": [
+     "Журнал"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "put": {
+    "summary": "Отметить группу: {kid_id: статус или null}. «Был» и «опоздал» списывают занятие; запускаются правила пропуска и продления",
+    "tags": [
+     "Журнал"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `attendance`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AttendanceIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/leads": {
+   "get": {
+    "summary": "Заявки (stage=0..4 для фильтра)",
+    "tags": [
+     "Заявки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `leads`"
+   },
+   "post": {
+    "summary": "Новая заявка (запускает правила этапа)",
+    "tags": [
+     "Заявки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `leads`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LeadIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/leads/{id}": {
+   "put": {
+    "summary": "Изменить заявку (смена этапа запускает правила)",
+    "tags": [
+     "Заявки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `leads`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LeadIn"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить заявку",
+    "tags": [
+     "Заявки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `leads`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/leads/{id}/stage": {
+   "post": {
+    "summary": "Перевести заявку на этап (для «Отказа» нужна причина)",
+    "tags": [
+     "Заявки"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `leads`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/StageIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks": {
+   "get": {
+    "summary": "Задачи (done=0|1, mine=1)",
+    "tags": [
+     "Задачи"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `tasks`"
+   },
+   "post": {
+    "summary": "Новая задача",
+    "tags": [
+     "Задачи"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `tasks`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TaskIn"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{id}": {
+   "patch": {
+    "summary": "Изменить задачу или отметить выполненной",
+    "tags": [
+     "Задачи"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `tasks`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TaskPatch"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Удалить задачу",
+    "tags": [
+     "Задачи"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `tasks`",
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ]
+   }
+  },
+  "/api/v1/events": {
+   "get": {
+    "summary": "История по записи (ref_type=lead|kid|fam&ref_id=…) или всего центра",
+    "tags": [
+     "История"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`"
+   },
+   "post": {
+    "summary": "Добавить заметку или записать отправленное сообщение",
+    "tags": [
+     "История"
+    ],
+    "responses": {
+     "200": {
+      "description": "Успешно"
+     },
+     "401": {
+      "description": "Не выполнен вход"
+     },
+     "403": {
+      "description": "Нет прав"
+     },
+     "422": {
+      "description": "Ошибка проверки данных"
+     }
+    },
+    "security": [
+     {
+      "bearer": []
+     }
+    ],
+    "description": "Нужное право: `read`",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/NoteIn"
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "RegisterIn": {
+    "properties": {
+     "center_name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Center Name",
+      "type": "string"
+     },
+     "city": {
+      "default": "",
+      "maxLength": 80,
+      "title": "City",
+      "type": "string"
+     },
+     "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "email": {
+      "maxLength": 200,
+      "minLength": 3,
+      "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+      "title": "Email",
+      "type": "string"
+     },
+     "password": {
+      "maxLength": 200,
+      "minLength": 8,
+      "title": "Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "center_name",
+     "name",
+     "email",
+     "password"
+    ],
+    "title": "RegisterIn",
+    "type": "object"
+   },
+   "LoginIn": {
+    "properties": {
+     "email": {
+      "maxLength": 200,
+      "minLength": 3,
+      "title": "Email",
+      "type": "string"
+     },
+     "password": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "LoginIn",
+    "type": "object"
+   },
+   "PasswordIn": {
+    "properties": {
+     "old_password": {
+      "minLength": 1,
+      "title": "Old Password",
+      "type": "string"
+     },
+     "new_password": {
+      "maxLength": 200,
+      "minLength": 8,
+      "title": "New Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "old_password",
+     "new_password"
+    ],
+    "title": "PasswordIn",
+    "type": "object"
+   },
+   "ImportIn": {
+    "additionalProperties": true,
+    "properties": {
+     "v": {
+      "title": "V",
+      "type": "integer"
+     }
+    },
+    "required": [
+     "v"
+    ],
+    "title": "ImportIn",
+    "type": "object"
+   },
+   "QuoteIn": {
+    "properties": {
+     "kids": {
+      "items": {
+       "type": "integer"
+      },
+      "title": "Kids",
+      "type": "array"
+     },
+     "lessons": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Lessons",
+      "type": "integer"
+     },
+     "extra": {
+      "default": 0,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Extra",
+      "type": "number"
+     }
+    },
+    "required": [
+     "kids",
+     "lessons"
+    ],
+    "title": "QuoteIn",
+    "type": "object"
+   },
+   "InvoiceIn": {
+    "properties": {
+     "family_id": {
+      "title": "Family Id",
+      "type": "integer"
+     },
+     "kids": {
+      "default": [],
+      "items": {
+       "type": "integer"
+      },
+      "title": "Kids",
+      "type": "array"
+     },
+     "lessons": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Lessons",
+      "type": "integer"
+     },
+     "amount": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000000,
+      "title": "Amount",
+      "type": "integer"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 300,
+      "title": "Note",
+      "type": "string"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Date"
+     }
+    },
+    "required": [
+     "family_id",
+     "amount"
+    ],
+    "title": "InvoiceIn",
+    "type": "object"
+   },
+   "PaymentIn": {
+    "properties": {
+     "family_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Family Id"
+     },
+     "amount": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000000,
+      "title": "Amount",
+      "type": "integer"
+     },
+     "method": {
+      "default": "cash",
+      "enum": [
+       "cash",
+       "kaspi",
+       "transfer"
+      ],
+      "title": "Method",
+      "type": "string"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Date"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 300,
+      "title": "Note",
+      "type": "string"
+     }
+    },
+    "required": [
+     "amount"
+    ],
+    "title": "PaymentIn",
+    "type": "object"
+   },
+   "OrgIn": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Name"
+     },
+     "city": {
+      "anyOf": [
+       {
+        "maxLength": 80,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "City"
+     },
+     "price": {
+      "anyOf": [
+       {
+        "maximum": 10000000,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Price"
+     },
+     "pack": {
+      "anyOf": [
+       {
+        "maximum": 500,
+        "minimum": 1,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Pack"
+     },
+     "sib2": {
+      "anyOf": [
+       {
+        "maximum": 100,
+        "minimum": 0,
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Sib2"
+     },
+     "sib3": {
+      "anyOf": [
+       {
+        "maximum": 100,
+        "minimum": 0,
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Sib3"
+     },
+     "tax": {
+      "anyOf": [
+       {
+        "maximum": 50,
+        "minimum": 0,
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Tax"
+     },
+     "kaspi_point": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Kaspi Point"
+     },
+     "kaspi_link": {
+      "anyOf": [
+       {
+        "maxLength": 500,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Kaspi Link"
+     },
+     "instagram": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Instagram"
+     },
+     "sel_cur": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Sel Cur"
+     }
+    },
+    "title": "OrgIn",
+    "type": "object"
+   },
+   "UserIn": {
+    "properties": {
+     "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "email": {
+      "maxLength": 200,
+      "minLength": 3,
+      "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+      "title": "Email",
+      "type": "string"
+     },
+     "phone": {
+      "default": "",
+      "maxLength": 40,
+      "title": "Phone",
+      "type": "string"
+     },
+     "role": {
+      "default": "teacher",
+      "enum": [
+       "owner",
+       "admin",
+       "teacher",
+       "manager",
+       "accountant"
+      ],
+      "title": "Role",
+      "type": "string"
+     },
+     "password": {
+      "maxLength": 200,
+      "minLength": 8,
+      "title": "Password",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "email",
+     "password"
+    ],
+    "title": "UserIn",
+    "type": "object"
+   },
+   "UserPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Name"
+     },
+     "phone": {
+      "anyOf": [
+       {
+        "maxLength": 40,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Phone"
+     },
+     "role": {
+      "anyOf": [
+       {
+        "enum": [
+         "owner",
+         "admin",
+         "teacher",
+         "manager",
+         "accountant"
+        ],
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Role"
+     },
+     "active": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Active"
+     },
+     "password": {
+      "anyOf": [
+       {
+        "maxLength": 200,
+        "minLength": 8,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Password"
+     }
+    },
+    "title": "UserPatch",
+    "type": "object"
+   },
+   "GroupIn": {
+    "properties": {
+     "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "dir": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Dir",
+      "type": "string"
+     },
+     "teacher": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Teacher",
+      "type": "string"
+     },
+     "room": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Room",
+      "type": "string"
+     },
+     "age_from": {
+      "anyOf": [
+       {
+        "maximum": 25,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Age From"
+     },
+     "age_to": {
+      "anyOf": [
+       {
+        "maximum": 25,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Age To"
+     },
+     "cap": {
+      "anyOf": [
+       {
+        "maximum": 500,
+        "minimum": 1,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Cap"
+     },
+     "days": {
+      "items": {
+       "type": "integer"
+      },
+      "minItems": 1,
+      "title": "Days",
+      "type": "array"
+     },
+     "time": {
+      "default": "16:00",
+      "pattern": "^\\d{2}:\\d{2}$",
+      "title": "Time",
+      "type": "string"
+     },
+     "price": {
+      "anyOf": [
+       {
+        "maximum": 10000000,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Price"
+     }
+    },
+    "required": [
+     "name",
+     "days"
+    ],
+    "title": "GroupIn",
+    "type": "object"
+   },
+   "FamilyIn": {
+    "properties": {
+     "parent": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Parent",
+      "type": "string"
+     },
+     "phone": {
+      "default": "",
+      "maxLength": 40,
+      "title": "Phone",
+      "type": "string"
+     }
+    },
+    "required": [
+     "parent"
+    ],
+    "title": "FamilyIn",
+    "type": "object"
+   },
+   "KidIn": {
+    "properties": {
+     "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "age": {
+      "anyOf": [
+       {
+        "maximum": 25,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Age"
+     },
+     "group_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Group Id"
+     },
+     "status": {
+      "default": "active",
+      "enum": [
+       "trial",
+       "active",
+       "pause",
+       "left"
+      ],
+      "title": "Status",
+      "type": "string"
+     },
+     "lessons_left": {
+      "default": 0,
+      "maximum": 10000,
+      "minimum": -1000,
+      "title": "Lessons Left",
+      "type": "integer"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 4000,
+      "title": "Note",
+      "type": "string"
+     },
+     "family_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Family Id"
+     },
+     "parent": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Parent",
+      "type": "string"
+     },
+     "phone": {
+      "default": "",
+      "maxLength": 40,
+      "title": "Phone",
+      "type": "string"
+     },
+     "lead_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Lead Id"
+     }
+    },
+    "required": [
+     "name"
+    ],
+    "title": "KidIn",
+    "type": "object"
+   },
+   "KidPatch": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Name"
+     },
+     "age": {
+      "anyOf": [
+       {
+        "maximum": 25,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Age"
+     },
+     "group_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Group Id"
+     },
+     "status": {
+      "anyOf": [
+       {
+        "enum": [
+         "trial",
+         "active",
+         "pause",
+         "left"
+        ],
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Status"
+     },
+     "lessons_left": {
+      "anyOf": [
+       {
+        "maximum": 10000,
+        "minimum": -1000,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Lessons Left"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "maxLength": 4000,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Note"
+     },
+     "family_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Family Id"
+     },
+     "parent": {
+      "anyOf": [
+       {
+        "maxLength": 120,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Parent"
+     },
+     "phone": {
+      "anyOf": [
+       {
+        "maxLength": 40,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Phone"
+     }
+    },
+    "title": "KidPatch",
+    "type": "object"
+   },
+   "ExpenseIn": {
+    "properties": {
+     "cat": {
+      "maxLength": 60,
+      "minLength": 1,
+      "title": "Cat",
+      "type": "string"
+     },
+     "amount": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000000,
+      "title": "Amount",
+      "type": "integer"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Date"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 300,
+      "title": "Note",
+      "type": "string"
+     }
+    },
+    "required": [
+     "cat",
+     "amount"
+    ],
+    "title": "ExpenseIn",
+    "type": "object"
+   },
+   "ItemIn": {
+    "properties": {
+     "name": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "unit": {
+      "default": "шт.",
+      "maxLength": 30,
+      "title": "Unit",
+      "type": "string"
+     },
+     "target": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Target",
+      "type": "integer"
+     },
+     "link": {
+      "default": "",
+      "maxLength": 500,
+      "title": "Link",
+      "type": "string"
+     },
+     "price": {
+      "anyOf": [
+       {
+        "exclusiveMinimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Price"
+     }
+    },
+    "required": [
+     "name"
+    ],
+    "title": "ItemIn",
+    "type": "object"
+   },
+   "PriceIn": {
+    "properties": {
+     "price": {
+      "exclusiveMinimum": 0,
+      "maximum": 100000000,
+      "title": "Price",
+      "type": "integer"
+     },
+     "date": {
+      "anyOf": [
+       {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Date"
+     }
+    },
+    "required": [
+     "price"
+    ],
+    "title": "PriceIn",
+    "type": "object"
+   },
+   "TemplateIn": {
+    "properties": {
+     "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+     },
+     "text": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "text"
+    ],
+    "title": "TemplateIn",
+    "type": "object"
+   },
+   "RuleIn": {
+    "properties": {
+     "trigger": {
+      "enum": [
+       "lead0",
+       "lead1",
+       "lead2",
+       "lead3",
+       "lead4",
+       "kidlow",
+       "absent",
+       "invoice"
+      ],
+      "title": "Trigger",
+      "type": "string"
+     },
+     "task": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Task",
+      "type": "string"
+     },
+     "days": {
+      "default": 0,
+      "maximum": 60,
+      "minimum": 0,
+      "title": "Days",
+      "type": "integer"
+     },
+     "tpl_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Tpl Id"
+     }
+    },
+    "required": [
+     "trigger",
+     "task"
+    ],
+    "title": "RuleIn",
+    "type": "object"
+   },
+   "AttendanceIn": {
+    "properties": {
+     "date": {
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "title": "Date",
+      "type": "string"
+     },
+     "group_id": {
+      "title": "Group Id",
+      "type": "integer"
+     },
+     "marks": {
+      "additionalProperties": {
+       "anyOf": [
+        {
+         "enum": [
+          "was",
+          "late",
+          "absent",
+          "excused"
+         ],
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "title": "Marks",
+      "type": "object"
+     }
+    },
+    "required": [
+     "date",
+     "group_id",
+     "marks"
+    ],
+    "title": "AttendanceIn",
+    "type": "object"
+   },
+   "LeadIn": {
+    "properties": {
+     "parent": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Parent",
+      "type": "string"
+     },
+     "phone": {
+      "default": "",
+      "maxLength": 40,
+      "title": "Phone",
+      "type": "string"
+     },
+     "child": {
+      "default": "",
+      "maxLength": 120,
+      "title": "Child",
+      "type": "string"
+     },
+     "age": {
+      "anyOf": [
+       {
+        "maximum": 25,
+        "minimum": 0,
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Age"
+     },
+     "dir": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Dir",
+      "type": "string"
+     },
+     "src": {
+      "default": "Другое",
+      "maxLength": 40,
+      "title": "Src",
+      "type": "string"
+     },
+     "stage": {
+      "default": 0,
+      "maximum": 4,
+      "minimum": 0,
+      "title": "Stage",
+      "type": "integer"
+     },
+     "reason": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Reason",
+      "type": "string"
+     },
+     "note": {
+      "default": "",
+      "maxLength": 4000,
+      "title": "Note",
+      "type": "string"
+     }
+    },
+    "required": [
+     "parent"
+    ],
+    "title": "LeadIn",
+    "type": "object"
+   },
+   "StageIn": {
+    "properties": {
+     "stage": {
+      "maximum": 4,
+      "minimum": 0,
+      "title": "Stage",
+      "type": "integer"
+     },
+     "reason": {
+      "default": "",
+      "maxLength": 80,
+      "title": "Reason",
+      "type": "string"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "maxLength": 4000,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Note"
+     }
+    },
+    "required": [
+     "stage"
+    ],
+    "title": "StageIn",
+    "type": "object"
+   },
+   "TaskIn": {
+    "properties": {
+     "title": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+     },
+     "due": {
+      "anyOf": [
+       {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Due"
+     },
+     "assignee_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Assignee Id"
+     },
+     "ref_type": {
+      "anyOf": [
+       {
+        "enum": [
+         "lead",
+         "kid",
+         "fam"
+        ],
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Ref Type"
+     },
+     "ref_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Ref Id"
+     },
+     "tpl_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Tpl Id"
+     }
+    },
+    "required": [
+     "title"
+    ],
+    "title": "TaskIn",
+    "type": "object"
+   },
+   "TaskPatch": {
+    "properties": {
+     "title": {
+      "anyOf": [
+       {
+        "maxLength": 300,
+        "minLength": 1,
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Title"
+     },
+     "due": {
+      "anyOf": [
+       {
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Due"
+     },
+     "assignee_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Assignee Id"
+     },
+     "done": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Done"
+     }
+    },
+    "title": "TaskPatch",
+    "type": "object"
+   },
+   "NoteIn": {
+    "properties": {
+     "ref_type": {
+      "enum": [
+       "lead",
+       "kid",
+       "fam"
+      ],
+      "title": "Ref Type",
+      "type": "string"
+     },
+     "ref_id": {
+      "title": "Ref Id",
+      "type": "integer"
+     },
+     "text": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+     },
+     "type": {
+      "default": "note",
+      "enum": [
+       "note",
+       "msg"
+      ],
+      "title": "Type",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ref_type",
+     "ref_id",
+     "text"
+    ],
+    "title": "NoteIn",
+    "type": "object"
+   }
+  },
+  "securitySchemes": {
+   "bearer": {
+    "type": "http",
+    "scheme": "bearer",
+    "bearerFormat": "JWT"
+   }
+  }
+ }
+}

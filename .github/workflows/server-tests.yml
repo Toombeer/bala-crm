@@ -1,0 +1,26 @@
+name: Тесты сервера
+
+on:
+  push:
+    paths: ['server/**', '.github/workflows/server-tests.yml']
+  pull_request:
+    paths: ['server/**']
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+      - name: Проверка синтаксиса веб-клиента
+        run: node --check web/app.js
+      - name: Документация API актуальна
+        run: python scripts/gen_api_docs.py && git diff --exit-code docs/
